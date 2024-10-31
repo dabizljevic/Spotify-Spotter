@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Spotify Spotter</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+    </style>
+    <link rel="icon" href="{{ url_for('static', filename='images/Spotify_Logo_White.svg')}}" type="image/icon type">
+
+  </head>
+  <body class="login-body">
+    <nav>
+        <!-- Navigation Menu-->
+        <nav class="navbar">
+          <div class="navdiv">
+            <div class="logo"><a href="/"><img src="{{ url_for('static', filename='images/Spotify_Logo_Green.svg')}}" alt="Spotify Logo">Spotify Spotter</a> </div>
+            <ul>
+              <li><a href="/global">Global Charts</a></li>
+              <li><a href="/user">Your Charts</a></li>
+              {% if is_authenticated %}
+                <li><a href="/login_page">Log Out</a></li>
+              {% else %}
+                <li><a href="/login_page">Log In</a></li>
+              {% endif %}
+            </ul>
+          </div>
+        </nav>
+    </nav>
+    <main>
+        <!-- Main Content -->
+        {% if is_authenticated %}
+          
+        {% else %}
+          <main class="login-container">
+            <div class="login-div">
+              <div class="login-logo"><img src="{{ url_for('static', filename='images/Spotify_Logo_White.svg')}}" alt="Spotify Logo"></div>
+              <div class="title"><center>Log in to the Spotify Spotter</center></div>
+              <center><button onclick="window.location.href='/login'" class="spotify-login"><img src="{{ url_for('static', filename='images/Spotify_Logo_Green.svg')}}" width=32>Log in with Spotify</button></center>
+              <hr>
+            </div>
+          </main>
+        {% endif %}
+         
+    </main>
+    <footer>
+        <!-- Footer Content-->
+    </footer>
+    <script src="script.js"></script>
+  </body>
+</html>

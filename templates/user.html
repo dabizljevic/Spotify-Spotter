@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Spotify Spotter</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+    </style>
+    <link rel="icon" href="{{ url_for('static', filename='images/Spotify_Logo_White.svg')}}" type="image/icon type">
+
+  </head>
+  <body class="homepage-body">
+    <nav>
+        <!-- Navigation Menu-->
+        <nav class="navbar">
+          <div class="navdiv">
+            <div class="logo"><a href="/"><img src="{{ url_for('static', filename='images/Spotify_Logo_Green.svg')}}" alt="Spotify Logo" width="32">Spotify Spotter</a> </div>
+            <ul>
+              <li><a href="/global">Global Charts</a></li>
+              <li><a href="#">Your Charts</a></li>
+              {% if is_authenticated %}
+                <li><a href="/login_page">Log Out</a></li>
+              {% else %}
+                <li><a href="/login_page">Log In</a></li>
+              {% endif %}
+              
+            </ul>
+          </div>
+        </nav>
+    </nav>
+    <main>
+        <!-- Main Content -->
+        {% if is_authenticated %}
+          <div class="vertical-container">
+            <div class="horizontal-container">
+              <h2>Recently Played</h2>
+              <img src="{{ url_for('static', filename='images/whitedropdown.svg')}}" style="width: 24px;" onclick="display_recently_played()">
+            </div>
+            <div id="recently-played" style="display: none;">
+              
+              <ul>
+                  {% for result in results %}
+                    <!-- <li>{{ result['track']['name'] }}</li> -->
+                    <div class="song-entry">
+                      <img src="{{ result['track']['album']['images'][1]['url'] }}">
+                      <div class ="song-information">
+                        <strong> {{ result['track']['name'] }} </strong>
+                        <p>
+                        {% for artist in result['track']['artists'] %}
+                          {{ artist['name'] }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                        </p>
+                      </div>
+                    </div>
+                 {% endfor %}
+              </ul>
+            </div>
+            <div class="horizontal-container">
+              <h2>Your Top Songs and Artists</h2>
+              <img src="{{ url_for('static', filename='images/whitedropdown.svg')}}" style="width: 24px;">
+            </div>
+            <div class="top-songs-and-artists">
+              <label for="time-frame">Choose a time frame:</label>
+              <select name="time-frame" id="time-frame" onchange="display_top_songs_artists()">
+                <option disabled selected value style="display: none;"> -- Select an option -- </option>
+                <option value="last-4-weeks" >Last Four Weeks?</option>
+                <option value="last-6-months">Last Six Months?</option>
+                <option value="all-time">All Time?</option>
+              </select>
+              <ul>
+                <a href="#" id="change-with-time-frame"></a>
+              </ul>
+            </div>
+          </div>
+        {% else %}
+          <h1 class="warning-label">Sign in to see your Spotify stats...</h1>
+        {% endif %}
+    </main>
+    <footer>
+        <!-- Footer Content-->
+    </footer>
+    <script src="{{ url_for('static', filename='script.js')}}"></script>
+  </body>
+</html>

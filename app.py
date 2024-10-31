@@ -52,10 +52,10 @@ def user_page():
             #get last 50 song into list
             results = sp.current_user_recently_played(limit=50)
             tracks = [ #formatting here 
-                item['track']['name'] + " by " + ", ".join(artist['name'] for artist in item['track']['artists'])
+                item['track']['name']  + " by " + ", ".join(artist['name'] for artist in item['track']['artists'])
                 for item in results['items']
             ]
-            return render_template('user.html', is_authenticated=is_authenticated, tracks=tracks) 
+            return render_template('user.html', is_authenticated=is_authenticated, tracks=tracks, results = results['items']) 
 
         #display songs
         # return "<br>".join(tracks)
