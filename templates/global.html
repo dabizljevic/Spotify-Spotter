@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Spotify Spotter</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+    </style>
+    <link rel="icon" href="{{ url_for('static', filename='images/Spotify_Logo_White.svg')}}" type="image/icon type">
+
+  </head>
+  <body class="homepage-body">
+    <nav>
+        <!-- Navigation Menu-->
+        <nav class="navbar">
+          <div class="navdiv">
+            <div class="logo"><a href="/"><img src="{{ url_for('static', filename='images/Spotify_Logo_Green.svg')}}" alt="Spotify Logo" width="32">Spotify Spotter</a> </div>
+            <ul>
+              <li><a href="#">Global Charts</a></li>
+              <li><a href="/user">Your Charts</a></li>
+              {% if is_authenticated %}
+                <li><a href="/login_page">Log Out</a></li>
+              {% else %}
+                <li><a href="/login_page">Log In</a></li>
+              {% endif %}
+            </ul>
+          </div>
+        </nav>
+    </nav>
+    <main>
+        <!-- Main Content -->
+         <main class="global-charts-container">
+            <h2 class="daily-title">
+                <span class="daily-title_TitleLine chart-title">
+                    <span class="daily-title_TitleLineAnimation slide-in">Daily Top Songs</span>
+                </span>
+            </h2>
+            <span class="daily-date-fade-in appear weekly-title">
+                <!-- <h3>Friday, October 18</h3> -->
+                 <h3 id="today"></h3>
+            </span>
+            <ol class="chart-entries">
+                <span class="chart-entry appear">
+                    <li class="chart-entry-item">
+                        <div class="entry-cover">
+                            <img src="{{ url_for('static', filename='images/Spotify_Logo_Green.svg')}}" class="entry-cover-style">
+                        </div>
+                        <div class="entry-position">
+                            1
+                        </div>
+                        <div class="entry-title">
+                            <p class="emphasized-title">Title</p>
+                            <p>Artist Names</p>
+                        </div>
+    
+                    </li>
+                </span>
+            </ol>
+            <b>Placeholder</b>
+            <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZEVXbMDoHDwVN2tF?utm_source=generator&theme=0" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            <h2 class="weekly-title">
+                <span class="weekly-title_TitleLine chart-title">
+                    <span class="weekly-title_TitleLineAnimation slide-in">Weekly Top Songs</span>
+                </span>
+            </h2>
+            <span class="weekly-dates-fade-in appear weekly-title">
+                <style>
+                    h3 {display: inline;}
+                </style>
+                <h3 id="lastFriday"></h3>
+                <h3>-</h3>
+                <h3 id="currentThursday"></h3>
+            </span>
+            <b>Placeholder</b>
+            <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZEVXbNG2KDcFcKOF?utm_source=generator&theme=0" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+         </main>
+    </main>
+    <footer>
+        <!-- Footer Content-->
+    </footer>
+    <script src="{{ url_for('static', filename='script.js')}}"></script>
+  </body>
+</html>

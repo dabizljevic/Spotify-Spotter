@@ -1,4 +1,4 @@
-from flask import Flask, redirect, request, session, url_for, render_template_string
+from flask import Flask, redirect, render_template, request, session, url_for, render_template_string
 from spotipy import Spotify
 from spotipy.oauth2 import SpotifyOAuth
 import os
@@ -22,11 +22,55 @@ sp_oauth = SpotifyOAuth(
     redirect_uri=REDIRECT_URI, 
     scope=SCOPE
 )
-
-#homepage that redirects to the spotify login page
 @app.route('/')
 def home():
+    return render_template('index.html', is_authenticated='token_info' in session)
+#homepage that redirects to the spotify login page
+@app.route('/global')
+def global_page():
+    return render_template('global.html', is_authenticated='token_info' in session)
+
+@app.route('/login_page')
+def login_page():
+    return render_template('login.html', is_authenticated='token_info' in session)
+
+@app.route('/user')
+def user_page():
+    try:
+        is_authenticated = 'token_info' in session
+        # tracks = []
+        #get token information and refresh if necessary
+        if is_authenticated:
+            token_info = session.get('token_info')
+            if sp_oauth.is_token_expired(token_info):
+                token_info = sp_oauth.refresh_access_token(token_info['refresh_token'])
+                session['token_info'] = token_info
+
+            #create a spotift client to interact with
+            sp = Spotify(auth=token_info['access_token'])
+
+            #get last 50 song into list
+            results = sp.current_user_recently_played(limit=50)
+            tracks = [ #formatting here 
+                item['track']['name']  + " by " + ", ".join(artist['name'] for artist in item['track']['artists'])
+                for item in results['items']
+            ]
+            return render_template('user.html', is_authenticated=is_authenticated, tracks=tracks, results = results['items']) 
+
+        #display songs
+        # return "<br>".join(tracks)
+        return render_template('user.html')
+    
+    #error handling
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        return f"Internal Server Error: {e}", 500
+        
+
+@app.route('/login')
+def login():
     return redirect(sp_oauth.get_authorize_url()) #redirect to spotify login using url
+
 
 #callback for authentication response
 @app.route('/callback')
@@ -58,21 +102,24 @@ def callback():
 @app.route('/dashboard')
 def dashboard():
     #go back to homepage without working token
+    # if 'token_info' not in session:
+    #     return redirect(url_for('home'))
     if 'token_info' not in session:
-        return redirect(url_for('home'))
+        return render_template('index.html')
     
     #quick html for dashboard
-    dashboard_html = '''
-    <h1>Spotify Dashboard</h1>
-    <p>Choose an option below:</p>
-    <ul>
-        <li><a href="/recently-played">Recently Played Songs</a></li>
-        <li><a href="/choose-time-range">Top Songs and Artists</a></li>
-    </ul>
-    '''
+    # dashboard_html = '''
+    # <h1>Spotify Dashboard</h1>
+    # <p>Choose an option below:</p>
+    # <ul>
+    #     <li><a href="/recently-played">Recently Played Songs</a></li>
+    #     <li><a href="/choose-time-range">Top Songs and Artists</a></li>
+    # </ul>
+    # '''
     
-    #renders html
-    return render_template_string(dashboard_html)
+    # #renders html
+    # return render_template_string(dashboard_html)
+    return render_template('index.html', is_authenticated='token_info' in session)
 
 #shows recently played
 @app.route('/recently-played')
