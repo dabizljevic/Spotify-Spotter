@@ -204,6 +204,71 @@ def top_songs_artists():
         print(f"Error occurred: {e}")
         return f"Internal Server Error: {e}", 500
 
+#route for displaying user's top genres
+@app.route('/top-genres')
+def top_genres():
+    try:
+        #get token information and refresh if necessary
+        token_info = session.get('token_info')
+        if sp_oauth.is_token_expired(token_info):
+            token_info = sp_oauth.refresh_access_token(token_info['refresh_token'])
+            session['token_info'] = token_info
+
+        #create a Spotify client to interact with
+        sp = Spotify(auth=token_info['access_token'])
+
+        #get user's top artists to determine genres
+        top_artists = sp.current_user_top_artists(limit=50)
+        
+        #gather genres from top artists and count occurrences
+        genre_counts = {}
+        for artist in top_artists['items']:
+            for genre in artist['genres']:
+                genre_counts[genre] = genre_counts.get(genre, 0) + 1
+        
+        #sort genres by frequency
+        sorted_genres = sorted(genre_counts.items(), key=lambda x: x[1], reverse=True)
+        top_genres_list = [f"{genre}: {count}" for genre, count in sorted_genres[:10]]  # top 10 genres
+
+        #display genres
+        return "<br>".join(["Top Genres:"] + top_genres_list)
+    
+    #error handling
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        return f"Internal Server Error: {e}", 500
+
+#route for displaying similar artists to user's favorite artists
+@app.route('/similar-artists')
+def similar_artists():
+    try:
+        #get token information and refresh if necessary
+        token_info = session.get('token_info')
+        if sp_oauth.is_token_expired(token_info):
+            token_info = sp_oauth.refresh_access_token(token_info['refresh_token'])
+            session['token_info'] = token_info
+
+        #create a Spotify client to interact with
+        sp = Spotify(auth=token_info['access_token'])
+
+        #get user's top artists and fetch similar artists for each
+        top_artists = sp.current_user_top_artists(limit=10)  # limit for fewer API calls
+        similar_artists_set = set()  # to avoid duplicates
+
+        #iterate over user's top artists and get similar artists
+        for artist in top_artists['items']:
+            related_artists = sp.artist_related_artists(artist['id'])
+            for related in related_artists['artists'][:3]:  # top 3 similar artists per artist
+                similar_artists_set.add(related['name'])
+
+        #display similar artists
+        return "<br>".join(["Artists Similar to Your Favorites:"] + list(similar_artists_set))
+    
+    #error handling
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        return f"Internal Server Error: {e}", 500
+
 #run the app
 if __name__ == '__main__':
     app.run(debug=True)
