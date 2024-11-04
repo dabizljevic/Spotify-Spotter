@@ -38,7 +38,6 @@ def login_page():
 def user_page():
     try:
         is_authenticated = 'token_info' in session
-        # tracks = []
         #get token information and refresh if necessary
         if is_authenticated:
             token_info = session.get('token_info')
@@ -50,12 +49,14 @@ def user_page():
             sp = Spotify(auth=token_info['access_token'])
 
             #get last 50 song into list
-            results = sp.current_user_recently_played(limit=50)
-            tracks = [ #formatting here 
-                item['track']['name']  + " by " + ", ".join(artist['name'] for artist in item['track']['artists'])
-                for item in results['items']
-            ]
-            return render_template('user.html', is_authenticated=is_authenticated, tracks=tracks, results = results['items']) 
+            recent_tracks = sp.current_user_recently_played(limit=50)
+            time_range = request.args.get('time_range', 'short_term')  # default to 'medium_term'
+            if time_range not in ['short_term', 'medium_term', 'long_term']:
+                return "Invalid time range specified.", 400
+            top_tracks = sp.current_user_top_tracks(limit=10, time_range=time_range)
+            top_artists = sp.current_user_top_artists(limit=10, time_range=time_range)
+            
+            return render_template('user.html', is_authenticated=is_authenticated, recent_tracks = recent_tracks['items'], top_tracks = top_tracks['items'], top_artists = top_artists['items'], time_frame=time_range) 
 
         #display songs
         # return "<br>".join(tracks)

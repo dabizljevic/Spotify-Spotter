@@ -37,13 +37,11 @@
           <div class="vertical-container">
             <div class="horizontal-container">
               <h2>Recently Played</h2>
-              <img src="{{ url_for('static', filename='images/whitedropdown.svg')}}" style="width: 24px;" onclick="display_recently_played()">
+              <img id="dropdown_recently_played" src="{{ url_for('static', filename='images/whitedropdown.svg')}}" style="width: 24px;" onclick="display_recently_played()">
             </div>
-            <div id="recently-played" style="display: none;">
-              
+            <div id="recently-played" style="display: none;"> 
               <ul>
-                  {% for result in results %}
-                    <!-- <li>{{ result['track']['name'] }}</li> -->
+                  {% for result in recent_tracks %}
                     <div class="song-entry">
                       <img src="{{ result['track']['album']['images'][1]['url'] }}">
                       <div class ="song-information">
@@ -60,19 +58,78 @@
             </div>
             <div class="horizontal-container">
               <h2>Your Top Songs and Artists</h2>
-              <img src="{{ url_for('static', filename='images/whitedropdown.svg')}}" style="width: 24px;">
+              <img id="dropdown_top_songs_artists" src="{{ url_for('static', filename='images/whitedropdown.svg')}}" style="width: 24px;" onclick="display_top_songs_artists()">
             </div>
-            <div class="top-songs-and-artists">
-              <label for="time-frame">Choose a time frame:</label>
-              <select name="time-frame" id="time-frame" onchange="display_top_songs_artists()">
+            <div id="top-songs-and-artists" style="display: none;">
+              <!-- <select name="time-frame" id="time-frame" onchange="time_frame_changed()">
                 <option disabled selected value style="display: none;"> -- Select an option -- </option>
-                <option value="last-4-weeks" >Last Four Weeks?</option>
-                <option value="last-6-months">Last Six Months?</option>
-                <option value="all-time">All Time?</option>
-              </select>
-              <ul>
-                <a href="#" id="change-with-time-frame"></a>
-              </ul>
+                <option value="short_term" >Last Four Weeks?</option>
+                <option value="medium_term">Last Six Months?</option>
+                <option value="long_term">All Time?</option>
+              </select> -->
+              <div class="dropdown">
+                <button class="dropbtn">Currently selected time frame:
+                {% if time_frame == 'short_term' %}
+                  <b>Last Four Weeks</b>
+                {% elif time_frame == 'medium_term' %}
+                  <b>Last Six Months</b>
+                {% elif time_frame == 'long_term' %}
+                  <b>All Time</b>
+                {% endif %}
+                </button>
+                <div class="dropdown-content">
+                  {% if time_frame == 'short_term' %}
+                    <a href="/user?time_range=medium_term">Last Six Months?</a>
+                    <a href="/user?time_range=long_term">All Time?</a> 
+                  {% elif time_frame == 'medium_term' %}
+                    <a href="/user?time_range=short_term">Last Four Weeks?</a>
+                    <a href="/user?time_range=long_term">All Time?</a>
+                  {% elif time_frame == 'long_term' %}
+                    <a href="/user?time_range=short_term">Last Four Weeks?</a>
+                    <a href="/user?time_range=medium_term">Last Six Months?</a>               
+                  {% endif %}
+                </div>
+              </div>
+                
+
+              <div class="horizontal-container">
+                <h3>Your Top Songs</h3>
+                <img id ="dropdown_top_songs" src="{{ url_for('static', filename='images/whitedropdown.svg')}}" style="width: 24px;" onclick="display_top_songs()">
+              </div>
+              <div id="top-songs" style="display: none;">
+                <ul>
+                  {% for track in top_tracks %}
+                    <div class="song-entry">
+                      <img src="{{ track['album']['images'][1]['url'] }}">
+                      <div class="song-information">
+                        <strong> {{ track['name'] }} </strong>
+                        <p>
+                          {% for artist in track['artists'] %}
+                            {{ artist['name'] }}{% if not loop.last %}, {% endif %}
+                          {% endfor %}
+                        </p>
+                      </div>
+                    </div>
+                  {% endfor %}
+                  
+                </ul>
+              </div>
+              <div class="horizontal-container">
+                <h3>Your Top Artists</h3>
+                <img id ="dropdown_top_artists" src="{{ url_for('static', filename='images/whitedropdown.svg')}}" style="width: 24px;" onclick="display_top_artists()">
+              </div>
+              <div id="top-artists" style="display: none;">
+                <ul>
+                  {% for artist in top_artists %} 
+                    <div class="song-entry">
+                      <img src="{{ artist['images'][1]['url']}}">
+                      <div class="song-information">
+                        <strong> {{artist['name'] }}</strong>
+                      </div>
+                    </div>
+                  {% endfor %}
+                </ul>
+              </div>
             </div>
           </div>
         {% else %}
