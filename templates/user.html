@@ -131,6 +131,18 @@
                 </ul>
               </div>
             </div>
+            <div class="horizontal-container">
+              <h2>Your Top Genres</h2>
+              <img id="dropdown_top_genres" src="{{ url_for('static', filename='images/whitedropdown.svg')}}" style="width: 24px;" onclick="display_top_genres()">
+            </div>
+            <div id="top-genres" style="display: none;">
+              <li>
+                {% for genre in top_genres %}
+                  {{ genre }}
+                  <br>
+                {% endfor %}
+              </li>
+            </div>
           </div>
         {% else %}
           <h1 class="warning-label">Sign in to see your Spotify stats...</h1>

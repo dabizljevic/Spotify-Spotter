@@ -77,6 +77,20 @@ function time_frame_changed() {
         window.location.href = "/user?time_range=long_term";
     }
 }
+
+function display_top_genres() {
+    var top_genres =  document.getElementById("top-genres");
+    var img = document.getElementById("dropdown_top_genres");
+
+    if (top_genres.style.display == "none") {
+        top_genres.style.display = "block";
+        img.style.transform = "rotate(180deg)";
+    } else {
+        top_genres.style.display = "none";
+        img.style.transform = "rotate(0deg)";
+    }
+
+}
 // async function display_top_songs_artists() {
 //     const time_frame = document.getElementById('time-frame').value;
 //     const display = document.getElementById('top-songs-artists-list');
