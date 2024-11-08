@@ -32,7 +32,13 @@
             <div class="login-div">
                 <div class="login-logo"><img src="images/Spotify_Logo_White.svg" alt="Spotify Logo"></div>
                 <div class="title"><center>Log in to the Spotify Spotter</center></div>
-                <center><button class="spotify-login"><img src="images/Spotify_Logo_Green.svg" width=32>Log in with Spotify</button></center>
+                <a href="{{ url_for('login') }}">
+                  <center>
+                    <button class="spotify-login">
+                      <img src="images/Spotify_Logo_Green.svg" width=32>Log in with Spotify
+                    </button>
+                  </center>
+                </a>
                 <hr>
             </div>
          </main>
