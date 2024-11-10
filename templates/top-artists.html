@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Spotify Spotter</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+    </style>
+    <link rel="icon" href="{{ url_for('static', filename='images/Spotify_Logo_White.svg')}}" type="image/icon type">
+
+  </head>
+  <body class="homepage-body">
+    <nav>
+        <!-- Navigation Menu-->
+        <nav class="navbar">
+          <div class="navdiv">
+            <div class="logo"><a href="/"><img src="{{ url_for('static', filename='images/Spotify_Logo_Green.svg')}}" alt="Spotify Logo" width="32">Spotify Spotter</a> </div>
+            <ul>
+              <li><a href="/global">Global Charts</a></li>
+              <li><a href="/user">User Charts</a></li>
+              {% if is_authenticated %}
+                <li><a href="/login_page">Log Out</a></li>
+              {% else %}
+                <li><a href="/login_page">Log In</a></li>
+              {% endif %}
+            </ul>
+          </div>
+        </nav>
+    </nav>
+    <main>
+        <!-- Main Content -->
+        {% if is_authenticated %}
+         <main class="global-charts-container">
+            <h2 class="daily-title">
+                <span class="daily-title_TitleLine chart-title">
+                  <span class="daily-title_TitleLineAnimation slide-in">User Charts</span>
+                </span>
+            </h2>
+            <span class="daily-date-fade-in appear weekly-title">
+                <h3> Select an option to view your listening trends!</h3>
+                 <ol class="user-options">
+                    <a class="button" href="#">Top Artists</a>
+                    <a class="button" href="top-songs.html">Top Songs</a>
+                    <a class="button" href="top-genres.html">Top Genres</a>
+                    <a class="button" href="listening-trends.html">Listening Trends</a>
+                    <a class="button" href="listening-history.html">Listening History</a>
+                  </ol>
+            </span>
+                  <div class="top-songs-and-artists">
+                    <h3>Your Top Artists</h3>
+                    <select id="artists" onchange="handleArtistsChange()">
+                      <option value="none" selected disabled hidden>Select a time range</option>
+                      <option value="short">Last Four Weeks</option>
+                      <option value="medium">Last Six Months</option>
+                      <option value="long">All Time</option>
+                    </select>
+                    <div id="top-artists">
+                      <ul id="stArtists" style="display: none;">
+                        {% for artist in short_term %} 
+                          <div class="song-entry">
+                            <img src="{{ artist['images'][1]['url']}}">
+                            <div class="song-information">
+                              <strong> {{artist['name'] }}</strong>
+                            </div>
+                            <span class="rank"> {{ loop.index }} </span>
+                          </div>
+                        {% endfor %}
+                      </ul>
+                      <ul id="mtArtists" style="display: none;">
+                        {% for artist in medium_term %}
+                          <div class="song-entry">
+                            <img src="{{ artist['images'][1]['url']}}">
+                            <div class="song-information">
+                              <strong> {{artist['name'] }}</strong>
+                            </div>
+                            <span class="rank"> {{ loop.index }} </span>
+                          </div>
+                        {% endfor %}
+                      </ul>
+                      <ul id="ltArtists" style="display: none;">
+                        {% for artist in long_term %} 
+                          <div class="song-entry">
+                            <img src="{{ artist['images'][1]['url']}}">
+                            <div class="song-information">
+                              <strong> {{artist['name'] }}</strong>
+                            </div>
+                            <span class="rank"> {{ loop.index }} </span>
+                          </div>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  </div>
+            </main>         
+          </main>
+        {% else %}
+          <h1 class="warning-label">Sign in to see your Spotify stats...</h1>
+        {% endif %}
+    </main>
+    <footer>
+        <!-- Footer Content-->
+    </footer>
+    <script src="{{ url_for('static', filename='script.js')}}"></script>
+  </body>
+</html>

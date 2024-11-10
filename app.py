@@ -79,7 +79,41 @@ def user_page():
     except Exception as e:
         print(f"Error occurred: {e}")
         return f"Internal Server Error: {e}", 500
-        
+
+@app.route('/top-artists')
+def top_artists_page():
+    try:
+        is_authenticated = 'token_info' in session
+        #get token information and refresh if necessary
+        if is_authenticated:
+            token_info = session.get('token_info')
+            if sp_oauth.is_token_expired(token_info):
+                token_info = sp_oauth.refresh_access_token(token_info['refresh_token'])
+                session['token_info'] = token_info
+
+            #create a spotift client to interact with
+            sp = Spotify(auth=token_info['access_token'])
+
+            # short_top_tracks = sp.current_user_top_tracks(limit=10, time_range='short_term')
+            # medium_top_tracks = sp.current_user_top_tracks(limit=10, time_range='medium_term')
+            # long_top_tracks = sp.current_user_top_tracks(limit=10, time_range='long_term')
+
+            short_top_artists = sp.current_user_top_artists(limit=10, time_range='short_term')
+            medium_top_artists = sp.current_user_top_artists(limit=10, time_range='medium_term')
+            long_top_artists = sp.current_user_top_artists(limit=10, time_range='long_term')
+            
+            return render_template('top-artists.html', is_authenticated=is_authenticated, short_term = short_top_artists['items'], medium_term = medium_top_artists['items'], long_term = long_top_artists['items']) 
+
+        #display songs
+        # return "<br>".join(tracks)
+        return render_template('top-artists.html')
+    
+    #error handling
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        return f"Internal Server Error: {e}", 500
+
+
 
 @app.route('/login')
 def login():

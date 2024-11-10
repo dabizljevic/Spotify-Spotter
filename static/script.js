@@ -15,6 +15,7 @@ document.getElementById("today").innerHTML = today;
 document.getElementById("lastFriday").innerHTML = lastFriday;
 document.getElementById("currentThursday").innerHTML = currentThursday;
 
+
 function display_recently_played() {
     var recently_played = document.getElementById("recently-played");
     var img = document.getElementById("dropdown_recently_played");
@@ -65,18 +66,64 @@ function display_top_songs_artists() {
     }
 }
 
-function time_frame_changed() {
-    var time_frame = document.getElementById("time-frame").value;
-    if (time_frame == "short_term") {
-        window.location.href = "/user?time_range=short_term";
+// function time_frame_changed() {
+//     var time_frame = document.getElementById("time-frame").value;
+//     if (time_frame == "short_term") {
+//         window.location.href = "/user?time_range=short_term";
+//     }
+//     if (time_frame == "medium_term") {
+//         window.location.href = "/user?time_range=medium_term";
+//     }
+//     if (time_frame == "long_term") {
+//         window.location.href = "/user?time_range=long_term";
+//     }
+// }
+function handleArtistsChange() {
+    var selected = document.getElementById('artists').value;
+    var short_term = document.getElementById("stArtists");
+    var medium_term = document.getElementById("mtArtists");
+    var long_term = document.getElementById("ltArtists");
+    if (selected == "short") {
+        short_term.style.display = "block";
+        medium_term.style.display = "none";
+        long_term.style.display = "none";
     }
-    if (time_frame == "medium_term") {
-        window.location.href = "/user?time_range=medium_term";
+    if (selected == "medium") {
+        short_term.style.display = "none";
+        medium_term.style.display = "block";
+        long_term.style.display = "none";
     }
-    if (time_frame == "long_term") {
-        window.location.href = "/user?time_range=long_term";
+    if (selected == "long") {
+        short_term.style.display = "none";
+        medium_term.style.display = "none";
+        long_term.style.display = "block";
     }
 }
+// function changed_time_range() {
+//     var time_frame = document.getElementById("time-range-artists").value;
+//     var short_term = document.getElementById("short-term-artists");
+//     var medium_term = document.getElementById("medium-term-artists");
+//     var long_term = document.getElementById("long-term-artists");
+//     var demo = document.getElementById("demo");
+//     if (time_frame == "short") {
+//         short_term.style.display = "block";
+//         medium_term.style.display = "none";
+//         long_term.style.display = "none";
+//         demo.innerHTML = "SHORT";
+//     }
+//     if (time_frame == "medium") {
+//         short_term.style.display = "none";
+//         medium_term.style.display = "block";
+//         long_term.style.display = "none";
+//         demo.innerHTML = "MEDIUM";
+//     }
+//     if (time_frame == "long") {
+//         short_term.style.display = "none";
+//         medium_term.style.display = "none";
+//         long_term.style.display = "block";
+//         demo.innerHTML = "LONG";
+//     }
+// }
 
 function display_top_genres() {
     var top_genres =  document.getElementById("top-genres");
@@ -91,26 +138,3 @@ function display_top_genres() {
     }
 
 }
-// async function display_top_songs_artists() {
-//     const time_frame = document.getElementById('time-frame').value;
-//     const display = document.getElementById('top-songs-artists-list');
-    
-//     display.innerHTML = "Make call to /top-song-artists with key: " + time_frame;
-//     try {
-//         const response = await fetch('/api/data?time_range=${time_frame}');
-//         if (!response.ok) {
-//             throw new Error('Response DNE');
-//         }
-//         const data = await response.json();
-//         data.forEarch(item => {
-//             const listItem = document.createElement('li');
-//             listItem.textContent = '${item.name} - ${item.artist}';
-//             listItem.appendChild(listItem);
-//         });
-//     } catch (error) {
-//         console.error('Error fetching data:', error);
-//         const errorItem = document.createElement('li');
-//         errorItem.textContent = 'Error loading data!';
-//         display.appendChild(errorItem);
-//     }
-// }
