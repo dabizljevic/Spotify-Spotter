@@ -99,6 +99,49 @@ function handleArtistsChange() {
         long_term.style.display = "block";
     }
 }
+function handleTracksChange() {
+    var selected = document.getElementById('tracks').value;
+    var short_term = document.getElementById("stTracks");
+    var medium_term = document.getElementById("mtTracks");
+    var long_term = document.getElementById("ltTracks");
+    if (selected == "short") {
+        short_term.style.display = "block";
+        medium_term.style.display = "none";
+        long_term.style.display = "none";
+    }
+    if (selected == "medium") {
+        short_term.style.display = "none";
+        medium_term.style.display = "block";
+        long_term.style.display = "none";
+    }
+    if (selected == "long") {
+        short_term.style.display = "none";
+        medium_term.style.display = "none";
+        long_term.style.display = "block";
+    }
+}
+
+function handleGenresChange() {
+    var selected = document.getElementById('genres').value;
+    var short_term = document.getElementById("stGenres");
+    var medium_term = document.getElementById("mtGenres");
+    var long_term = document.getElementById("ltGenres");
+    if (selected == "short") {
+        short_term.style.display = "block";
+        medium_term.style.display = "none";
+        long_term.style.display = "none";
+    }
+    if (selected == "medium") {
+        short_term.style.display = "none";
+        medium_term.style.display = "block";
+        long_term.style.display = "none";
+    }
+    if (selected == "long") {
+        short_term.style.display = "none";
+        medium_term.style.display = "none";
+        long_term.style.display = "block";
+    }
+}
 // function changed_time_range() {
 //     var time_frame = document.getElementById("time-range-artists").value;
 //     var short_term = document.getElementById("short-term-artists");

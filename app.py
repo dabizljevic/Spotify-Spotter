@@ -94,18 +94,11 @@ def top_artists_page():
             #create a spotift client to interact with
             sp = Spotify(auth=token_info['access_token'])
 
-            # short_top_tracks = sp.current_user_top_tracks(limit=10, time_range='short_term')
-            # medium_top_tracks = sp.current_user_top_tracks(limit=10, time_range='medium_term')
-            # long_top_tracks = sp.current_user_top_tracks(limit=10, time_range='long_term')
-
             short_top_artists = sp.current_user_top_artists(limit=10, time_range='short_term')
             medium_top_artists = sp.current_user_top_artists(limit=10, time_range='medium_term')
             long_top_artists = sp.current_user_top_artists(limit=10, time_range='long_term')
             
             return render_template('top-artists.html', is_authenticated=is_authenticated, short_term = short_top_artists['items'], medium_term = medium_top_artists['items'], long_term = long_top_artists['items']) 
-
-        #display songs
-        # return "<br>".join(tracks)
         return render_template('top-artists.html')
     
     #error handling
@@ -113,6 +106,82 @@ def top_artists_page():
         print(f"Error occurred: {e}")
         return f"Internal Server Error: {e}", 500
 
+@app.route('/top-songs')
+def top_songs_page():
+    try:
+        is_authenticated = 'token_info' in session
+        #get token information and refresh if necessary
+        if is_authenticated:
+            token_info = session.get('token_info')
+            if sp_oauth.is_token_expired(token_info):
+                token_info = sp_oauth.refresh_access_token(token_info['refresh_token'])
+                session['token_info'] = token_info
+
+            #create a spotift client to interact with
+            sp = Spotify(auth=token_info['access_token'])
+
+            short_top_tracks = sp.current_user_top_tracks(limit=10, time_range='short_term')
+            medium_top_tracks = sp.current_user_top_tracks(limit=10, time_range='medium_term')
+            long_top_tracks = sp.current_user_top_tracks(limit=10, time_range='long_term')
+
+            return render_template('top-songs.html', is_authenticated=is_authenticated, short_term = short_top_tracks['items'], medium_term = medium_top_tracks['items'], long_term = long_top_tracks['items']) 
+
+        return render_template('top-songs.html')
+    
+    #error handling
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        return f"Internal Server Error: {e}", 500
+
+@app.route('/top-genres')
+def top_genres_page():
+    try:
+        is_authenticated = 'token_info' in session
+        #get token information and refresh if necessary
+        if is_authenticated:
+            token_info = session.get('token_info')
+            if sp_oauth.is_token_expired(token_info):
+                token_info = sp_oauth.refresh_access_token(token_info['refresh_token'])
+                session['token_info'] = token_info
+
+            #create a spotift client to interact with
+            sp = Spotify(auth=token_info['access_token'])
+
+            short_top_artists = sp.current_user_top_artists(limit=50, time_range='short_term')
+            medium_top_artists = sp.current_user_top_artists(limit=50, time_range='medium_term')
+            long_top_artists = sp.current_user_top_artists(limit=50, time_range='long_term')
+        
+            #gather genres from top artists and count occurrences
+            short_genre_counts = {}
+            for artist in short_top_artists['items']:
+                for genre in artist['genres']:
+                    short_genre_counts[genre] = short_genre_counts.get(genre, 0) + 1
+            sorted_short_genres = sorted(short_genre_counts.items(), key=lambda x: x[1], reverse=True)
+            short_top_genres_list = [f"{genre}: {count}" for genre, count in sorted_short_genres[:10]]  # top 10 genres
+
+            medium_genre_counts = {}
+            for artist in medium_top_artists['items']:
+                for genre in artist['genres']:
+                    medium_genre_counts[genre] = medium_genre_counts.get(genre, 0) + 1
+            sorted_medium_genres = sorted(medium_genre_counts.items(), key=lambda x: x[1], reverse=True)
+            medium_top_genres_list = [f"{genre}: {count}" for genre, count in sorted_medium_genres[:10]]  # top 10 genres
+
+            long_genre_counts = {}
+            for artist in long_top_artists['items']:
+                for genre in artist['genres']:
+                    long_genre_counts[genre] = long_genre_counts.get(genre, 0) + 1
+            sorted_long_genres = sorted(long_genre_counts.items(), key=lambda x: x[1], reverse=True)
+            long_top_genres_list = [f"{genre}: {count}" for genre, count in sorted_long_genres[:10]]  # top 10 genres
+
+            
+            
+            return render_template('top-genres.html', is_authenticated=is_authenticated, short_term = short_top_genres_list, medium_term = medium_top_genres_list, long_term = long_top_genres_list) 
+        return render_template('top-genres.html')
+    
+    #error handling
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        return f"Internal Server Error: {e}", 500
 
 
 @app.route('/login')
