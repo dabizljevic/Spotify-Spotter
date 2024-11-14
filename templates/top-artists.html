@@ -20,7 +20,7 @@
             <div class="logo"><a href="/"><img src="{{ url_for('static', filename='images/Spotify_Logo_Green.svg')}}" alt="Spotify Logo" width="32">Spotify Spotter</a> </div>
             <ul>
               <li><a href="/global">Global Charts</a></li>
-              <li><a href="/user">User Charts</a></li>
+              <li><a href="/user">Your Charts</a></li>
               {% if is_authenticated %}
                 <li><a href="/login_page">Log Out</a></li>
               {% else %}
@@ -36,7 +36,7 @@
          <main class="global-charts-container">
             <h2 class="daily-title">
                 <span class="daily-title_TitleLine chart-title">
-                  <span class="daily-title_TitleLineAnimation slide-in">User Charts</span>
+                  <span class="daily-title_TitleLineAnimation slide-in">Your Charts</span>
                 </span>
             </h2>
             <span class="daily-date-fade-in appear weekly-title">
@@ -45,8 +45,9 @@
                     <a class="button" href="#">Top Artists</a>
                     <a class="button" href="/top-songs">Top Songs</a>
                     <a class="button" href="/top-genres">Top Genres</a>
-                    <a class="button" href="listening-trends.html">Listening Trends</a>
-                    <a class="button" href="listening-history.html">Listening History</a>
+                    <a class="button" href="#">Listening Trends</a>
+                    <a class="button" href="/listening-history">Listening History</a>
+                    <a class="button" href="/similar-artists">Similar Artists</a>
                   </ol>
             </span>
                   <div class="top-songs-and-artists">

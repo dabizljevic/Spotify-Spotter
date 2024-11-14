@@ -332,7 +332,9 @@ li a{
 .top-artists ul {
     padding-left: 0;
 }
-
+.recently-played ul {
+    padding-left: 0;
+}
 .rank {
     position: absolute;  /* Absolutely position the rank */
     top: 10px;           /* Position the rank 10px from the top */

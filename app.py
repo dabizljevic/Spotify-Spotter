@@ -80,6 +80,68 @@ def user_page():
         print(f"Error occurred: {e}")
         return f"Internal Server Error: {e}", 500
 
+@app.route('/listening-history')
+def listening_history_page():
+    try:
+        is_authenticated = 'token_info' in session
+        #get token information and refresh if necessary
+        if is_authenticated:
+            token_info = session.get('token_info')
+            if sp_oauth.is_token_expired(token_info):
+                token_info = sp_oauth.refresh_access_token(token_info['refresh_token'])
+                session['token_info'] = token_info
+
+            #create a spotift client to interact with
+            sp = Spotify(auth=token_info['access_token'])
+
+            recent_tracks = sp.current_user_recently_played(limit=50)
+
+            return render_template('listening-history.html', is_authenticated=is_authenticated, recent_tracks=recent_tracks['items']) 
+
+        return render_template('listening-history.html')
+        #error handling
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        return f"Internal Server Error: {e}", 500
+
+@app.route('/similar-artists')
+def similar_artists_page():
+    try:
+        is_authenticated = 'token_info' in session
+        #get token information and refresh if necessary
+        if is_authenticated:
+            token_info = session.get('token_info')
+            if sp_oauth.is_token_expired(token_info):
+                token_info = sp_oauth.refresh_access_token(token_info['refresh_token'])
+                session['token_info'] = token_info
+
+            #create a spotift client to interact with
+            sp = Spotify(auth=token_info['access_token'])
+
+            top_artists = sp.current_user_top_artists(limit=10)  # limit for fewer API calls
+            similar_artists_set = set()  # to avoid duplicates
+
+            #iterate over user's top artists and get similar artists
+            for artist in top_artists['items']:
+                related_artists = sp.artist_related_artists(artist['id'])
+                for related in related_artists['artists'][:3]:  # top 3 similar artists per artist
+                    tuple = (related['name'], related['images'][1]['url'])
+                    similar_artists_set.add(tuple)
+
+            #display similar artists
+            # return "<br>".join(["Artists Similar to Your Favorites:"] + list(similar_artists_set))
+
+            return render_template('similar-artists.html', is_authenticated=is_authenticated, similar = similar_artists_set) 
+
+        #display songs
+        # return "<br>".join(tracks)
+        return render_template('similar-artists.html')
+    
+    #error handling
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        return f"Internal Server Error: {e}", 500
+
 @app.route('/top-artists')
 def top_artists_page():
     try:
