@@ -448,6 +448,122 @@ def similar_artists():
         print(f"Error occurred: {e}")
         return f"Internal Server Error: {e}", 500
 
+#page for choosing the type of playlist
+@app.route('/choose-playlist')
+def choose_playlist():
+
+    #playlist types listed
+    playlist_options_html = '''
+    <h1>Select Playlist Type</h1>
+    <ul>
+        <li><a href="/preview-playlist?type=top_tracks">Top Tracks Playlist</a></li>
+        <li><a href="/preview-playlist?type=genre_based">Genre-Based Playlist</a></li>
+        <li><a href="/preview-playlist?type=similar_artists">Similar Artists Playlist</a></li>
+        <li><a href="/preview-playlist?type=mood_based">Mood-Based Playlist</a></li>
+        <li><a href="/preview-playlist?type=recently_played">Recently Played Enhancer</a></li>
+    </ul>
+    '''
+
+    return render_template_string(playlist_options_html)
+
+#page to preview whatever playlist type was chosen
+@app.route('/preview-playlist')
+def preview_playlist():
+    #get the type
+    playlist_type = request.args.get('type')
+    
+    #contact spotify client
+    token_info = session.get('token_info')
+    if sp_oauth.is_token_expired(token_info):
+        token_info = sp_oauth.refresh_access_token(token_info['refresh_token'])
+        session['token_info'] = token_info
+
+    sp = Spotify(auth=token_info['access_token'])
+    
+    #generate the playlist based on chosen type
+    if playlist_type == 'top_tracks':
+        tracks = sp.current_user_top_tracks(limit=10)
+        track_uris = [track['uri'] for track in tracks['items']]
+        track_names = [f"{track['name']} by {track['artists'][0]['name']}" for track in tracks['items']]
+
+    elif playlist_type == 'genre_based':
+        top_artists = sp.current_user_top_artists(limit=50)
+        genres = {genre for artist in top_artists['items'] for genre in artist['genres']}
+        genre_tracks = []
+        for genre in genres:
+            results = sp.search(q=f'genre:"{genre}"', type='track', limit=2)
+            genre_tracks.extend([track['uri'] for track in results['tracks']['items']])
+        track_uris = genre_tracks[:10]
+        track_names = [f"{sp.track(uri)['name']} by {sp.track(uri)['artists'][0]['name']}" for uri in track_uris]
+
+    elif playlist_type == 'similar_artists':
+        top_artists = sp.current_user_top_artists(limit=5)
+        similar_artists_tracks = []
+        for artist in top_artists['items']:
+            related_artists = sp.artist_related_artists(artist['id'])
+            for related in related_artists['artists'][:2]:
+                results = sp.artist_top_tracks(related['id'])
+                similar_artists_tracks.extend([track['uri'] for track in results['tracks'][:1]])
+        track_uris = similar_artists_tracks[:10]
+        track_names = [f"{sp.track(uri)['name']} by {sp.track(uri)['artists'][0]['name']}" for uri in track_uris]
+
+    elif playlist_type == 'mood_based':
+        top_tracks = sp.current_user_top_tracks(limit=10)
+        mood_tracks = [track for track in top_tracks['items'] if sp.audio_features(track['uri'])[0]['valence'] > 0.5]
+        track_uris = [track['uri'] for track in mood_tracks]
+        track_names = [f"{track['name']} by {track['artists'][0]['name']}" for track in mood_tracks]
+
+    elif playlist_type == 'recently_played':
+        recent_tracks = sp.current_user_recently_played(limit=20)
+        track_uris = [item['track']['uri'] for item in recent_tracks['items'][:10]]
+        track_names = [f"{item['track']['name']} by {item['track']['artists'][0]['name']}" for item in recent_tracks['items'][:10]]
+
+    else:
+        return "Invalid playlist type selected.", 400
+
+    #store track info and display
+    session['track_uris'] = track_uris
+    track_preview_html = '''
+    <h1>Preview Playlist Tracks</h1>
+    <ul>
+    '''
+    for track in track_names:
+        track_preview_html += f"<li>{track}</li>"
+    track_preview_html += '</ul><a href="/create-playlist">Add to Spotify</a>'
+    return render_template_string(track_preview_html)
+
+#creates playlist in spotify
+@app.route('/create-playlist')
+def create_playlist():
+    try:
+        #check if track URIs are in session
+        track_uris = session.get('track_uris')
+        if not track_uris:
+            return "No tracks found. Please select a playlist type first.", 400
+        
+        #retrieve token and refresh if needed
+        token_info = session.get('token_info')
+        if sp_oauth.is_token_expired(token_info):
+            token_info = sp_oauth.refresh_access_token(token_info['refresh_token'])
+            session['token_info'] = token_info
+
+        sp = Spotify(auth=token_info['access_token'])
+        
+        #create a playlist in spotify and add tracks
+        user_id = sp.current_user()['id']
+        playlist_name = "Your Personalized Playlist"
+        description = "A playlist created based on your listening habits"
+        new_playlist = sp.user_playlist_create(user=user_id, name=playlist_name, description=description)
+        #add tracks to the playlist
+        sp.user_playlist_add_tracks(user=user_id, playlist_id=new_playlist['id'], tracks=track_uris) 
+
+        return f"Playlist '{playlist_name}' created successfully!"
+
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        return f"Internal Server Error: {e}", 500
+    
+
 #run the app
 if __name__ == '__main__':
     app.run(debug=True)
