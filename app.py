@@ -25,6 +25,7 @@ sp_oauth = SpotifyOAuth(
 @app.route('/')
 def home():
     return render_template('index.html', is_authenticated='token_info' in session)
+
 #homepage that redirects to the spotify login page
 @app.route('/global')
 def global_page():
