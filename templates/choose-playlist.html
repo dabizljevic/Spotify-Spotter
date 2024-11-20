@@ -45,9 +45,10 @@
                     <a class="button" href="/top-artists">Top Artists</a>
                     <a class="button" href="/top-songs">Top Songs</a>
                     <a class="button" href="/top-genres">Top Genres</a>
-                    <a class="button" href="#">Listening Trends</a>
                     <a class="button" href="/listening-history">Listening History</a>
                     <a class="button" href="/similar-artists">Similar Artists</a>
+                    <a class="button" href="#">Suggested Playlists</a>
+
                   </ol>
             </span>
                   <div class="top-songs-and-artists">
@@ -75,6 +76,23 @@
                                     </div>
                                 </div>
                                 {% endfor %}
+                                <center><button onclick="window.location.href='/preview-playlist?type=top_tracks'" class="spotify-login"><img src="{{ url_for('static', filename='images/Spotify_Logo_Green.svg')}}" width=32>Add playlist to Spotify?</button></center>
+                            </ul>
+                            <ul id="genreBasedPlaylist" style="display: none;">
+                                {% for uri in genre_based %} 
+                                <div class="song-entry">
+                                    <img src="{{ sp.track(uri)['album']['images'][1]['url']}}">
+                                    <div class="song-information">
+                                    <strong> {{ sp.track(uri)['name'] }}</strong>
+                                    <p>
+                                    {% for artist in sp.track(uri)['artists'] %}
+                                      {{ artist['name'] }}{% if not loop.last %}, {% endif %}
+                                    {% endfor %}
+                                    </p>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                                <center><button onclick="window.location.href='/preview-playlist?type=genre_based'" class="spotify-login"><img src="{{ url_for('static', filename='images/Spotify_Logo_Green.svg')}}" width=32>Add playlist to Spotify?</button></center>
                             </ul>
                             <ul id="similarArtistsPlaylist" style="display: none;">
                                 {% for uri in similar_artists %}
@@ -90,6 +108,7 @@
                                         </div>
                                       </div>
                                 {% endfor %}
+                                <center><button onclick="window.location.href='/preview-playlist?type=similar_artists'" class="spotify-login"><img src="{{ url_for('static', filename='images/Spotify_Logo_Green.svg')}}" width=32>Add playlist to Spotify?</button></center>
                             </ul>
                             <ul id="moodBasedPlaylist" style="display: none;">
                                 {% for uri in mood_based %}
@@ -105,6 +124,7 @@
                                         </div>
                                       </div>
                                 {% endfor %}
+                                <center><button onclick="window.location.href='/preview-playlist?type=mood_based'" class="spotify-login"><img src="{{ url_for('static', filename='images/Spotify_Logo_Green.svg')}}" width=32>Add playlist to Spotify?</button></center>
                             </ul>
                             <ul id="recentlyPlayedPlaylist" style="display: none;">
                                 {% for uri in recently_played %}
@@ -120,6 +140,7 @@
                                         </div>
                                       </div>
                                 {% endfor %}
+                                <center><button onclick="window.location.href='/preview-playlist?type=recently_played'" class="spotify-login"><img src="{{ url_for('static', filename='images/Spotify_Logo_Green.svg')}}" width=32>Add playlist to Spotify?</button></center>
                             </ul>
                         </div>
                       </div>

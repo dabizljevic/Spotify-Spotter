@@ -148,32 +148,45 @@ function handleGenresChange() {
 function handlePlaylistChange() {
     var selected = document.getElementById('playlists').value;
     var top = document.getElementById("topTracksPlaylist");
+    var genre = document.getElementById("genreBasedPlaylist");
     var similar = document.getElementById("similarArtistsPlaylist");
     var mood = document.getElementById("moodBasedPlaylist");
     var recent = document.getElementById("recentlyPlayedPlaylist");
 
     if (selected == "top_tracks") {
         top.style.display = "block";
+        genre.style.display = "none";
+        similar.style.display = "none";
+        mood.style.display = "none";
+        recent.style.display = "none";
+    }
+    if (selected == "genre_based") {
+        top.style.display = "none";
+        genre.style.display = "block";
         similar.style.display = "none";
         mood.style.display = "none";
         recent.style.display = "none";
     }
     if (selected == "similar_artists") {
         top.style.display = "none";
+        genre.style.display = "none";
         similar.style.display = "block";
         mood.style.display = "none";
         recent.style.display = "none";
     }
     if (selected == "mood_based") {
         top.style.display = "none";
+        genre.style.display = "none";
         similar.style.display = "none";
         mood.style.display = "block";
         recent.style.display = "none";
     }
     if (selected == "recently_played") {
         top.style.display = "none";
+        genre.style.display = "none";
         similar.style.display = "none";
         mood.style.display = "none";
         recent.style.display = "block";
     }
 }
+
