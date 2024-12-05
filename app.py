@@ -1,4 +1,5 @@
 from flask import Flask, redirect, render_template, request, session, url_for, render_template_string
+import spotipy
 from spotipy import Spotify
 from spotipy.oauth2 import SpotifyOAuth
 import os
@@ -15,11 +16,15 @@ REDIRECT_URI = 'http://127.0.0.1:5000/callback'
 #scope for what we want to perform
 SCOPE = "user-read-recently-played user-top-read"
 
+#cache handler setup
+cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
+
 #spotiftOAuth setup
 sp_oauth = SpotifyOAuth(
     client_id=CLIENT_ID, 
     client_secret=CLIENT_SECRET, 
     redirect_uri=REDIRECT_URI, 
+    cache_handler=cache_handler,
     scope=SCOPE
 )
 @app.route('/')
@@ -261,7 +266,7 @@ def callback():
             return "No code found in request. Please retry logging in.", 400
 
         #get and store token information
-        token_info = sp_oauth.get_access_token(code)
+        token_info = sp_oauth.get_access_token(code, check_cache=False)
         print(f"Token info response: {token_info}")
         session['token_info'] = token_info
 
