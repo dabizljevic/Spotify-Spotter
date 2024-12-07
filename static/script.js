@@ -66,18 +66,19 @@ function display_top_songs_artists() {
     }
 }
 
-// function time_frame_changed() {
-//     var time_frame = document.getElementById("time-frame").value;
-//     if (time_frame == "short_term") {
-//         window.location.href = "/user?time_range=short_term";
-//     }
-//     if (time_frame == "medium_term") {
-//         window.location.href = "/user?time_range=medium_term";
-//     }
-//     if (time_frame == "long_term") {
-//         window.location.href = "/user?time_range=long_term";
-//     }
-// }
+function display_top_genres() {
+    var top_genres =  document.getElementById("top-genres");
+    var img = document.getElementById("dropdown_top_genres");
+
+    if (top_genres.style.display == "none") {
+        top_genres.style.display = "block";
+        img.style.transform = "rotate(180deg)";
+    } else {
+        top_genres.style.display = "none";
+        img.style.transform = "rotate(0deg)";
+    }
+}
+
 function handleArtistsChange() {
     var selected = document.getElementById('artists').value;
     var short_term = document.getElementById("stArtists");
@@ -99,6 +100,7 @@ function handleArtistsChange() {
         long_term.style.display = "block";
     }
 }
+
 function handleTracksChange() {
     var selected = document.getElementById('tracks').value;
     var short_term = document.getElementById("stTracks");
@@ -142,42 +144,49 @@ function handleGenresChange() {
         long_term.style.display = "block";
     }
 }
-// function changed_time_range() {
-//     var time_frame = document.getElementById("time-range-artists").value;
-//     var short_term = document.getElementById("short-term-artists");
-//     var medium_term = document.getElementById("medium-term-artists");
-//     var long_term = document.getElementById("long-term-artists");
-//     var demo = document.getElementById("demo");
-//     if (time_frame == "short") {
-//         short_term.style.display = "block";
-//         medium_term.style.display = "none";
-//         long_term.style.display = "none";
-//         demo.innerHTML = "SHORT";
-//     }
-//     if (time_frame == "medium") {
-//         short_term.style.display = "none";
-//         medium_term.style.display = "block";
-//         long_term.style.display = "none";
-//         demo.innerHTML = "MEDIUM";
-//     }
-//     if (time_frame == "long") {
-//         short_term.style.display = "none";
-//         medium_term.style.display = "none";
-//         long_term.style.display = "block";
-//         demo.innerHTML = "LONG";
-//     }
-// }
 
-function display_top_genres() {
-    var top_genres =  document.getElementById("top-genres");
-    var img = document.getElementById("dropdown_top_genres");
+function handlePlaylistChange() {
+    var selected = document.getElementById('playlists').value;
+    var top = document.getElementById("topTracksPlaylist");
+    var genre = document.getElementById("genreBasedPlaylist");
+    var similar = document.getElementById("similarArtistsPlaylist");
+    var mood = document.getElementById("moodBasedPlaylist");
+    var recent = document.getElementById("recentlyPlayedPlaylist");
 
-    if (top_genres.style.display == "none") {
-        top_genres.style.display = "block";
-        img.style.transform = "rotate(180deg)";
-    } else {
-        top_genres.style.display = "none";
-        img.style.transform = "rotate(0deg)";
+    if (selected == "top_tracks") {
+        top.style.display = "block";
+        genre.style.display = "none";
+        similar.style.display = "none";
+        mood.style.display = "none";
+        recent.style.display = "none";
     }
-
+    if (selected == "genre_based") {
+        top.style.display = "none";
+        genre.style.display = "block";
+        similar.style.display = "none";
+        mood.style.display = "none";
+        recent.style.display = "none";
+    }
+    if (selected == "similar_artists") {
+        top.style.display = "none";
+        genre.style.display = "none";
+        similar.style.display = "block";
+        mood.style.display = "none";
+        recent.style.display = "none";
+    }
+    if (selected == "mood_based") {
+        top.style.display = "none";
+        genre.style.display = "none";
+        similar.style.display = "none";
+        mood.style.display = "block";
+        recent.style.display = "none";
+    }
+    if (selected == "recently_played") {
+        top.style.display = "none";
+        genre.style.display = "none";
+        similar.style.display = "none";
+        mood.style.display = "none";
+        recent.style.display = "block";
+    }
 }
+

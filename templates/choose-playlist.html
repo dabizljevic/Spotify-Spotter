@@ -42,59 +42,24 @@
             <span class="daily-date-fade-in appear weekly-title">
                 <h3> Select an option to view your listening trends!</h3>
                  <ol class="user-options">
-                    <a class="button" href="#">Top Artists</a>
+                    <a class="button" href="/top-artists">Top Artists</a>
                     <a class="button" href="/top-songs">Top Songs</a>
                     <a class="button" href="/top-genres">Top Genres</a>
                     <a class="button" href="/listening-history">Listening History</a>
                     <a class="button" href="/similar-artists">Similar Artists</a>
-                    <a class="button" href="/choose-playlist">Suggested Playlists</a>
+                    <a class="button" href="#">Suggested Playlists</a>
+
                   </ol>
             </span>
                   <div class="top-songs-and-artists">
-                    <h3>Your Top Artists</h3>
-                    <select id="artists" onchange="handleArtistsChange()">
-                      <option value="none" selected disabled hidden>Select a time range</option>
-                      <option value="short">Last Four Weeks</option>
-                      <option value="medium">Last Six Months</option>
-                      <option value="long">All Time</option>
-                    </select>
-                    <div id="top-artists">
-                      <ul id="stArtists" style="display: none;">
-                        {% for artist in short_term %} 
-                          <div class="song-entry">
-                            <img src="{{ artist['images'][1]['url']}}">
-                            <div class="song-information">
-                              <strong> {{artist['name'] }}</strong>
-                            </div>
-                            <span class="rank"> {{ loop.index }} </span>
-                          </div>
-                        {% endfor %}
-                      </ul>
-                      <ul id="mtArtists" style="display: none;">
-                        {% for artist in medium_term %}
-                          <div class="song-entry">
-                            <img src="{{ artist['images'][1]['url']}}">
-                            <div class="song-information">
-                              <strong> {{artist['name'] }}</strong>
-                            </div>
-                            <span class="rank"> {{ loop.index }} </span>
-                          </div>
-                        {% endfor %}
-                      </ul>
-                      <ul id="ltArtists" style="display: none;">
-                        {% for artist in long_term %} 
-                          <div class="song-entry">
-                            <img src="{{ artist['images'][1]['url']}}">
-                            <div class="song-information">
-                              <strong> {{artist['name'] }}</strong>
-                            </div>
-                            <span class="rank"> {{ loop.index }} </span>
-                          </div>
-                        {% endfor %}
-                      </ul>
-                    </div>
+                    <h3>What Are We Feeling Today?</h3>
+                    <ul><a href="/preview-playlist?type=top_tracks">Top Tracks</a></ul>
+                    <ul><a href="/preview-playlist?type=genre_based">Genre-Based</a></ul>
+                    <ul><a href="/preview-playlist?type=similar_artists">Similar Artists</a></ul>
+                    <ul><a href="/preview-playlist?type=mood_based">Mood-Based</a></ul>
+                    <ul><a href="/preview-playlist?type=recently_played">Recently Played</a></ul>
                   </div>
-            </main>         
+            </main>    
           </main>
         {% else %}
           <h1 class="warning-label">Sign in to see your Spotify stats...</h1>
