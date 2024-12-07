@@ -14,7 +14,7 @@ CLIENT_SECRET = '6258e4f10ecc4fedb4470d38e9b10884'
 REDIRECT_URI = 'http://127.0.0.1:5000/callback'
 
 #scope for what we want to perform
-SCOPE = "user-read-recently-played user-top-read"
+SCOPE = "user-read-recently-played user-top-read playlist-modify-public playlist-modify-private"
 
 #cache handler setup
 cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
