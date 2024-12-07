@@ -299,6 +299,61 @@ def choose_playlist_page():
         print(f"Error occurred: {e}")
         return f"Internal Server Error: {e}", 500
 
+#page to preview whatever playlist type was chosen
+@app.route('/preview-playlist')
+def preview_playlist_page():
+    #get the type
+    playlist_type = request.args.get('type')
+    
+    #contact spotify client
+    token_info = session.get('token_info')
+    if sp_oauth.is_token_expired(token_info):
+        token_info = sp_oauth.refresh_access_token(token_info['refresh_token'])
+        session['token_info'] = token_info
+
+    sp = Spotify(auth=token_info['access_token'])
+    
+    #generate the playlist based on chosen type
+    if playlist_type == 'top_tracks':
+        tracks = sp.current_user_top_tracks(limit=10)
+        track_uris = [track['uri'] for track in tracks['items']]
+
+    elif playlist_type == 'genre_based':
+        top_artists = sp.current_user_top_artists(limit=50)
+        genres = {genre for artist in top_artists['items'] for genre in artist['genres']}
+        genre_tracks = []
+        for genre in genres:
+            results = sp.search(q=f'genre:"{genre}"', type='track', limit=2)
+            genre_tracks.extend([track['uri'] for track in results['tracks']['items']])
+        track_uris = genre_tracks[:10]
+
+    elif playlist_type == 'similar_artists':
+        top_artists = sp.current_user_top_artists(limit=5)
+        similar_artists_tracks = []
+        for artist in top_artists['items']:
+            related_artists = sp.artist_related_artists(artist['id'])
+            for related in related_artists['artists'][:2]:
+                results = sp.artist_top_tracks(related['id'])
+                similar_artists_tracks.extend([track['uri'] for track in results['tracks'][:1]])
+        track_uris = similar_artists_tracks[:10]
+
+    elif playlist_type == 'mood_based':
+        top_tracks = sp.current_user_top_tracks(limit=10)
+        mood_tracks = [track for track in top_tracks['items'] if sp.audio_features(track['uri'])[0]['valence'] > 0.5]
+        track_uris = [track['uri'] for track in mood_tracks]
+
+    elif playlist_type == 'recently_played':
+        recent_tracks = sp.current_user_recently_played(limit=20)
+        track_uris = [item['track']['uri'] for item in recent_tracks['items'][:10]]
+
+    else:
+        return "Invalid playlist type selected.", 400
+
+    #store track info and display
+    session['track_uris'] = track_uris
+
+    return render_template('preview-playlist.html', is_authenticated='token_info' in session, playlist=track_uris, sp = sp)
+
 @app.route('/login')
 def login():
     return redirect(sp_oauth.get_authorize_url()) #redirect to spotify login using url
