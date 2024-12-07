@@ -39,11 +39,22 @@
                   <span class="daily-title_TitleLineAnimation slide-in">Your Charts</span>
                 </span>
             </h2>
+            <span class="daily-date-fade-in appear weekly-title">
+              <h3> Select an option to view your listening trends!</h3>
+               <ol class="user-options">
+                  <a class="button" href="/top-artists">Top Artists</a>
+                  <a class="button" href="/top-songs">Top Songs</a>
+                  <a class="button" href="/top-genres">Top Genres</a>
+                  <a class="button" href="/listening-history">Listening History</a>
+                  <a class="button" href="/similar-artists">Similar Artists</a>
+                  <a class="button" href="#">Suggested Playlists</a>
+                </ol>
+          </span>
                 <div class="top-songs-and-artists">
-                  <h3>We Recommend...</h3>
+                  <h3>Made With Love</h3>
                         <div id="top-artists">
-                            <ul id="topTracksPlaylist" style="display: none;">
-                                {% for uri in top_tracks %} 
+                            <ul id="topTracksPlaylist">
+                                {% for uri in playlist %} 
                                 <div class="song-entry">
                                     <img src="{{ sp.track(uri)['album']['images'][1]['url']}}">
                                     <div class="song-information">
@@ -56,71 +67,7 @@
                                     </div>
                                 </div>
                                 {% endfor %}
-                                <center><button onclick="window.location.href='/preview-playlist?type=top_tracks'" class="spotify-login"><img src="{{ url_for('static', filename='images/Spotify_Logo_Green.svg')}}" width=32>Add playlist to Spotify?</button></center>
-                            </ul>
-                            <ul id="genreBasedPlaylist" style="display: none;">
-                                {% for uri in genre_based %} 
-                                <div class="song-entry">
-                                    <img src="{{ sp.track(uri)['album']['images'][1]['url']}}">
-                                    <div class="song-information">
-                                    <strong> {{ sp.track(uri)['name'] }}</strong>
-                                    <p>
-                                    {% for artist in sp.track(uri)['artists'] %}
-                                      {{ artist['name'] }}{% if not loop.last %}, {% endif %}
-                                    {% endfor %}
-                                    </p>
-                                    </div>
-                                </div>
-                                {% endfor %}
-                                <center><button onclick="window.location.href='/preview-playlist?type=genre_based'" class="spotify-login"><img src="{{ url_for('static', filename='images/Spotify_Logo_Green.svg')}}" width=32>Add playlist to Spotify?</button></center>
-                            </ul>
-                            <ul id="similarArtistsPlaylist" style="display: none;">
-                                {% for uri in similar_artists %}
-                                    <div class="song-entry">
-                                        <img src="{{ sp.track(uri)['album']['images'][1]['url']}}">
-                                        <div class="song-information">
-                                          <strong> {{ sp.track(uri)['name'] }}</strong>
-                                          <p>
-                                            {% for artist in sp.track(uri)['artists'] %}
-                                              {{ artist['name'] }}{% if not loop.last %}, {% endif %}
-                                            {% endfor %}
-                                          </p>
-                                        </div>
-                                      </div>
-                                {% endfor %}
-                                <center><button onclick="window.location.href='/preview-playlist?type=similar_artists'" class="spotify-login"><img src="{{ url_for('static', filename='images/Spotify_Logo_Green.svg')}}" width=32>Add playlist to Spotify?</button></center>
-                            </ul>
-                            <ul id="moodBasedPlaylist" style="display: none;">
-                                {% for uri in mood_based %}
-                                    <div class="song-entry">
-                                        <img src="{{ sp.track(uri)['album']['images'][1]['url']}}">
-                                        <div class="song-information">
-                                          <strong> {{ sp.track(uri)['name'] }}</strong>
-                                          <p>
-                                            {% for artist in sp.track(uri)['artists'] %}
-                                              {{ artist['name'] }}{% if not loop.last %}, {% endif %}
-                                            {% endfor %}
-                                          </p>
-                                        </div>
-                                      </div>
-                                {% endfor %}
-                                <center><button onclick="window.location.href='/preview-playlist?type=mood_based'" class="spotify-login"><img src="{{ url_for('static', filename='images/Spotify_Logo_Green.svg')}}" width=32>Add playlist to Spotify?</button></center>
-                            </ul>
-                            <ul id="recentlyPlayedPlaylist" style="display: none;">
-                                {% for uri in recently_played %}
-                                    <div class="song-entry">
-                                        <img src="{{ sp.track(uri)['album']['images'][1]['url']}}">
-                                        <div class="song-information">
-                                          <strong> {{ sp.track(uri)['name'] }}</strong>
-                                          <p>
-                                            {% for artist in sp.track(uri)['artists'] %}
-                                              {{ artist['name'] }}{% if not loop.last %}, {% endif %}
-                                            {% endfor %}
-                                          </p>
-                                        </div>
-                                      </div>
-                                {% endfor %}
-                                <center><button onclick="window.location.href='/preview-playlist?type=recently_played'" class="spotify-login"><img src="{{ url_for('static', filename='images/Spotify_Logo_Green.svg')}}" width=32>Add playlist to Spotify?</button></center>
+                                <center><button onclick="window.location.href='/create-playlist'" class="spotify-login"><img src="{{ url_for('static', filename='images/Spotify_Logo_Green.svg')}}" width=32>Add playlist to Spotify?</button></center>
                             </ul>
                         </div>
                       </div>
