@@ -260,34 +260,34 @@ def choose_playlist_page():
             sp = Spotify(auth=token_info['access_token'])
     
             #generate the playlist based on chosen type
-            top_tracks = sp.current_user_top_tracks(limit=10)
+            # top_tracks = sp.current_user_top_tracks(limit=10)
 
-            top_track_uris = [track['uri'] for track in top_tracks['items']]
+            # top_track_uris = [track['uri'] for track in top_tracks['items']]
 
-            top_artists = sp.current_user_top_artists(limit=50)
-            genres = {genre for artist in top_artists['items'] for genre in artist['genres']}
-            genre_tracks = []
-            for genre in genres:
-                results = sp.search(q=f'genre:"{genre}"', type='track', limit=2)
-                genre_tracks.extend([track['uri'] for track in results['tracks']['items']])
-            genre_uris = genre_tracks[:10]      
+            # top_artists = sp.current_user_top_artists(limit=50)
+            # genres = {genre for artist in top_artists['items'] for genre in artist['genres']}
+            # genre_tracks = []
+            # for genre in genres:
+            #     results = sp.search(q=f'genre:"{genre}"', type='track', limit=2)
+            #     genre_tracks.extend([track['uri'] for track in results['tracks']['items']])
+            # genre_uris = genre_tracks[:10]      
                   
-            top_artists = sp.current_user_top_artists(limit=5)
-            similar_artists_tracks = []
-            for artist in top_artists['items']:
-                    related_artists = sp.artist_related_artists(artist['id'])
-                    for related in related_artists['artists'][:2]:
-                        results = sp.artist_top_tracks(related['id'])
-                        similar_artists_tracks.extend([track['uri'] for track in results['tracks'][:1]])
-            similar_artists_track_uris = similar_artists_tracks[:10]
+            # top_artists = sp.current_user_top_artists(limit=5)
+            # similar_artists_tracks = []
+            # for artist in top_artists['items']:
+            #         related_artists = sp.artist_related_artists(artist['id'])
+            #         for related in related_artists['artists'][:2]:
+            #             results = sp.artist_top_tracks(related['id'])
+            #             similar_artists_tracks.extend([track['uri'] for track in results['tracks'][:1]])
+            # similar_artists_track_uris = similar_artists_tracks[:10]
 
-            mood_tracks = [track for track in top_tracks['items'] if sp.audio_features(track['uri'])[0]['valence'] > 0.5]
-            mood_track_uris = [track['uri'] for track in mood_tracks]
+            # mood_tracks = [track for track in top_tracks['items'] if sp.audio_features(track['uri'])[0]['valence'] > 0.5]
+            # mood_track_uris = [track['uri'] for track in mood_tracks]
             
-            recent_tracks = sp.current_user_recently_played(limit=20)
-            recent_track_uris = [item['track']['uri'] for item in recent_tracks['items'][:10]]
+            # recent_tracks = sp.current_user_recently_played(limit=20)
+            # recent_track_uris = [item['track']['uri'] for item in recent_tracks['items'][:10]]
 
-            return render_template('choose-playlist.html', is_authenticated=is_authenticated, sp=sp, top_tracks=top_track_uris, genre_based=genre_uris, similar_artists=similar_artists_track_uris, mood_based=mood_track_uris, recently_played=recent_track_uris) 
+            return render_template('choose-playlist.html', is_authenticated=is_authenticated) 
         return render_template('choose-playlist.html')
     except Exception as e:
         print(f"Error occurred: {e}")
