@@ -13,6 +13,15 @@ While the widely popular Spotify Wrapped allows users to access their stats ever
 ## Technical Architecture
 ![Technical Architecture Diagram](./images/technical_architecture.png)
 
+**Backend**: 
+Uses the Flask framework. When a user makes request, triggers a request in the corresponding Flask route allowing the backend to compile a response and send it to the user. 
+Functionalities include caching, authenticating users using Spotify, and fetching listening data. 
+
+**Frontend**: 
+uses the React library and JavaScript. Has a dynamic user interface. 
+Four different pages including a homepage, login page, user data page, and global charts page. 
+
+
 ## Developers
 - **Stevan Dabizljevic**: Backend
 - **Ken Sterzinger**: Backend
