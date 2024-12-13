@@ -11,6 +11,7 @@ Users are also able to…
 While the widely popular Spotify Wrapped allows users to access their stats every year at the beginning of December, our application allows users to access this data whenever they want it. 
 
 ## Technical Architecture
+![Technical Architecture Diagram](./images/technical_architecture.png)
 
 ## Developers
 - **Stevan Dabizljevic**: Backend
