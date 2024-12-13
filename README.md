@@ -11,7 +11,7 @@ Users are also able to…
 While the widely popular Spotify Wrapped allows users to access their stats every year at the beginning of December, our application allows users to access this data whenever they want it. 
 
 ## Technical Architecture
-![Technical Architecture Diagram](./images/technical_architecture.png)
+![Technical Architecture Diagram](./images/converted_image.png)
 
 **Backend**: 
 Uses the Flask framework. When a user makes request, triggers a request in the corresponding Flask route allowing the backend to compile a response and send it to the user. 
@@ -59,10 +59,7 @@ python -m venv venv
 pip install Flask spotipy
 ```
 ###  4. Configure Spotify API credentials
-You will need to create your own Spotify Developer credentials.
-1. Go to Spotify Developer Dashboard
-2. Log in to your Spotify account
-3. Create a new Spotify application to obtain the CLIENT_ID, CLIENT_SECRET, and set the REDIRECT_URI for your application.
+To log in, your Spotify account needs to be whitelisted on our end through our developer dashboard. We have contacted our mentor (Armaan) about how to best go about this.
 
 ### 5. Run the Flask Application
 Now that everything is set up, you can run the Flask application:
