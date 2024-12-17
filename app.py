@@ -9,8 +9,8 @@ app = Flask(__name__)
 app.secret_key = os.urandom(12)
 
 #spotify api credentials
-CLIENT_ID = 'f26aee952fe54f308ae6743839a40d65'
-CLIENT_SECRET = '6258e4f10ecc4fedb4470d38e9b10884'
+CLIENT_ID = ''
+CLIENT_SECRET = ''
 REDIRECT_URI = 'http://127.0.0.1:5000/callback'
 
 #scope for what we want to perform
